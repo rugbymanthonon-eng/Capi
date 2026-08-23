@@ -1,12 +1,9 @@
-const CACHE = "capi-v1";
+const CACHE = "capi-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./app.js",
-  "./app-part1.js",
-  "./app-part2.js",
-  "./app-part3.js",
+  "./app-fixed.js",
   "./db.js",
   "./manifest.webmanifest",
   "./assets/background.webp",
