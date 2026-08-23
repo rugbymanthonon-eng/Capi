@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef2f4">
+  <meta name="description" content="Suivi personnel des dépenses, revenus et patrimoine.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Capi</title>
+</head>
+<body>
+  <div id="app">
+    <main>
+      <!-- ACCUEIL -->
+      <section id="view-home" class="view home-view active" aria-labelledby="home-title">
+        <div class="home-overlay"></div>
+        <div class="home-content">
+          <h1 id="home-title">Accueil</h1>
+
+          <div class="home-actions">
+            <button class="home-action expense" data-open-transaction="expense">
+              <span class="action-icon">↓</span>
+              <span class="action-label">Ajouter une dépense</span>
+              <span class="chevron">›</span>
+            </button>
+
+            <button class="home-action income" data-open-transaction="income">
+              <span class="action-icon">↑</span>
+              <span class="action-label">Ajouter une entrée</span>
+              <span class="chevron">›</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATISTIQUES -->
+      <section id="view-stats" class="view content-view" aria-labelledby="stats-title">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">Vue financière</p>
+            <h1 id="stats-title">Statistiques</h1>
+          </div>
+          <img class="header-logo" src="./assets/icon-192.png" alt="">
+        </header>
+
+        <article class="glass-card">
+          <div class="card-head">
+            <div>
+              <h2>Dépenses par cycle</h2>
+              <p id="cycle-description" class="muted"></p>
+            </div>
+            <select id="cycle-count" class="compact-select" aria-label="Nombre de cycles">
+              <option value="6">6 cycles</option>
+              <option value="12" selected>12 cycles</option>
+              <option value="18">18 cycles</option>
+            </select>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="overview-chart"></canvas>
+          </div>
+          <p id="overview-empty" class="empty-state hidden">Pas encore assez de données pour afficher le graphique.</p>
+        </article>
+
+        <article class="glass-card">
+          <div class="card-head">
+            <div>
+              <h2>Analyse personnalisée</h2>
+              <p class="muted">Ajoute les catégories ou sous-catégories que tu veux comparer.</p>
+            </div>
+          </div>
+
+          <div class="series-builder">
+            <select id="series-select"></select>
+            <button id="add-series" class="small-primary">Ajouter</button>
+          </div>
+
+          <div id="series-chips" class="series-chips"></div>
+
+          <div class="segmented small-segmented" role="group" aria-label="Mode du graphique">
+            <button class="segment active" data-chart-mode="grouped">Comparaison</button>
+            <button class="segment" data-chart-mode="stacked">Cumul</button>
+          </div>
+
+          <div class="chart-wrap custom-chart-wrap">
+            <canvas id="custom-chart"></canvas>
+          </div>
+          <div id="chart-legend" class="legend"></div>
+        </article>
+
+        <article class="glass-card history-card">
+          <div class="card-head">
+            <div>
+              <h2>Historique</h2>
+              <p class="muted">Consulte, corrige ou supprime une opération.</p>
+            </div>
+          </div>
+
+          <div class="history-filters">
+            <input id="history-search" type="search" placeholder="Lieu, note…">
+            <select id="history-type">
+              <option value="">Entrées + dépenses</option>
+              <option value="expense">Dépenses</option>
+              <option value="income">Entrées</option>
+            </select>
+            <select id="history-category">
+              <option value="">Toutes les catégories</option>
+            </select>
+            <select id="history-subcategory">
+              <option value="">Toutes les sous-catégories</option>
+            </select>
+            <label class="date-filter">Du <input id="history-from" type="date"></label>
+            <label class="date-filter">Au <input id="history-to" type="date"></label>
+            <button id="history-reset" class="ghost-btn">Réinitialiser</button>
+          </div>
+
+          <div id="history-list" class="history-list"></div>
+        </article>
+      </section>
+
+      <!-- GESTION -->
+      <section id="view-manage" class="view content-view" aria-labelledby="manage-title">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">Personnalisation</p>
+            <h1 id="manage-title">Gestion</h1>
+          </div>
+          <img class="header-logo" src="./assets/icon-192.png" alt="">
+        </header>
+
+        <article class="glass-card">
+          <div class="card-head">
+            <div>
+              <h2>Profil</h2>
+              <p class="muted">Ces informations restent sur cet appareil.</p>
+            </div>
+          </div>
+          <form id="profile-form" class="form-grid">
+            <label>Prénom<input id="profile-firstname" autocomplete="given-name"></label>
+            <label>Nom<input id="profile-lastname" autocomplete="family-name"></label>
+            <label class="full">Adresse e-mail<input id="profile-email" type="email" autocomplete="email"></label>
+            <label class="full">Début du cycle budgétaire
+              <div class="inline-field">
+                <input id="profile-cycle-day" type="number" min="1" max="31" inputmode="numeric">
+                <span>du mois</span>
+              </div>
+              <small>Ex. 25 = du 25 d’un mois au 24 du mois suivant.</small>
+            </label>
+            <div class="full form-actions">
+              <button class="primary-btn" type="submit">Enregistrer le profil</button>
+            </div>
+          </form>
+        </article>
+
+        <article class="glass-card">
+          <div class="card-head">
+            <div>
+              <h2>Catégories</h2>
+              <p class="muted">Crée, mets en favori, archive et réactive sans perdre l’historique.</p>
+            </div>
+            <button id="add-category" class="small-primary">+ Catégorie</button>
+          </div>
+
+          <div class="segmented small-segmented manage-type">
+            <button class="segment active" data-manage-type="expense">Dépenses</button>
+            <button class="segment" data-manage-type="income">Entrées</button>
+          </div>
+
+          <div id="category-manager" class="category-manager"></div>
+        </article>
+
+        <article class="glass-card">
+          <div class="card-head">
+            <div>
+              <h2>Conversion CHF → EUR</h2>
+              <p class="muted">Le taux est actualisé au maximum une fois par jour et figé dans chaque opération.</p>
+            </div>
+          </div>
+          <div class="fx-status">
+            <div>
+              <span class="muted">Dernier taux connu</span>
+              <strong id="fx-rate">—</strong>
+            </div>
+            <div>
+              <span class="muted">Date du taux</span>
+              <strong id="fx-date">—</strong>
+            </div>
+            <button id="refresh-fx" class="ghost-btn">Actualiser</button>
+          </div>
+          <p id="fx-message" class="microcopy"></p>
+        </article>
+
+        <article class="glass-card">
+          <div class="card-head">
+            <div>
+              <h2>Sauvegarde</h2>
+              <p class="muted">Les données sont locales : garde une copie de temps en temps.</p>
+            </div>
+          </div>
+          <div class="backup-actions">
+            <button id="export-backup" class="primary-btn">Exporter une sauvegarde</button>
+            <button id="restore-backup" class="ghost-btn">Restaurer</button>
+            <button id="export-csv" class="ghost-btn">Exporter en CSV</button>
+            <input id="restore-file" type="file" accept=".json,application/json" hidden>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navigation principale">
+      <button class="nav-item active" data-nav="home">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.8 12 3l9 7.8v9.2a1 1 0 0 1-1 1h-5.5v-6.2h-5V21H4a1 1 0 0 1-1-1z"/></svg>
+        </span>
+        <span>Accueil</span>
+      </button>
+      <button class="nav-item" data-nav="stats">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h3v10zm6 0V4h3v16zm6 0v-7h3v7z"/></svg>
+        </span>
+        <span>Statistiques</span>
+      </button>
+      <button class="nav-item" data-nav="manage">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10v2H4zm0 10h16v2H4zm12-5h4v2h-4zM16 4h2v6h-2zM8 12h2v8H8zM4 14h4v2H4z"/></svg>
+        </span>
+        <span>Gestion</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Transaction sheet -->
+  <div id="transaction-modal" class="modal-backdrop hidden" aria-hidden="true">
+    <section class="sheet transaction-sheet" role="dialog" aria-modal="true" aria-labelledby="transaction-title">
+      <div class="sheet-handle"></div>
+      <header class="sheet-head">
+        <button class="circle-btn" data-close-modal="transaction-modal" aria-label="Fermer">×</button>
+        <div>
+          <p id="transaction-kicker" class="eyebrow"></p>
+          <h2 id="transaction-title"></h2>
+        </div>
+        <span class="sheet-spacer"></span>
+      </header>
+      <div id="transaction-content"></div>
+    </section>
+  </div>
+
+  <!-- Generic dialog -->
+  <div id="dialog-modal" class="modal-backdrop hidden" aria-hidden="true">
+    <section class="sheet dialog-sheet" role="dialog" aria-modal="true">
+      <div class="sheet-handle"></div>
+      <div id="dialog-content"></div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
