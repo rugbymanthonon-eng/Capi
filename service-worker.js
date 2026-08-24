@@ -1,10 +1,11 @@
-const CACHE = "capi-v6";
+const CACHE = "capi-v7";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app-fixed.js?v=5",
   "./stats-enhanced.js?v=5",
+  "./chart-label-fix.js?v=7",
   "./stats-theme.js?v=6",
   "./stats-core-v6.js?v=6",
   "./db.js",
