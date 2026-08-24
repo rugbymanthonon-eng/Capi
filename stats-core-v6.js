@@ -18,6 +18,7 @@ else initOverviewStats();
 function initOverviewStats(){
   const input = $("#cycle-count");
   if(!input || !$("#overview-chart")) return;
+  prepareOverviewUI();
   statsState.count = clampCount(input.value || 12);
 
   input.addEventListener("input",()=>{
@@ -39,6 +40,29 @@ function initOverviewStats(){
   },230));
 
   scheduleRedraw(0);
+}
+
+function prepareOverviewUI(){
+  const canvas=$("#overview-chart");
+  const card=canvas?.closest(".glass-card");
+  const title=card?.querySelector(".card-head h2");
+  if(title) title.textContent="Entrées et dépenses par cycle";
+  $("#open-stats-filter")?.remove();
+  const empty=$("#overview-empty");
+  if(empty) empty.textContent="Aucune entrée ou dépense sur ce cycle.";
+  if(card && !card.querySelector(".overview-legend")){
+    const legend=document.createElement("div");
+    legend.className="overview-legend";
+    legend.setAttribute("aria-label","Légende du graphique");
+    legend.innerHTML='<span><i class="overview-dot expense"></i>Dépenses</span><span><i class="overview-dot income"></i>Entrées</span>';
+    card.querySelector(".chart-wrap")?.before(legend);
+  }
+  if(!document.getElementById("capi-overview-v6-style")){
+    const style=document.createElement("style");
+    style.id="capi-overview-v6-style";
+    style.textContent='.overview-legend{display:flex;justify-content:flex-end;align-items:center;gap:14px;margin:2px 2px 8px;color:#667681;font-size:.76rem;font-weight:700}.overview-legend span{display:inline-flex;align-items:center;gap:6px}.overview-dot{width:9px;height:9px;border-radius:50%;display:inline-block}.overview-dot.expense{background:#d95b5f}.overview-dot.income{background:#4da879}@media(max-width:430px){.overview-legend{justify-content:center;margin-top:0}}';
+    document.head.appendChild(style);
+  }
 }
 
 function clampCount(value){
