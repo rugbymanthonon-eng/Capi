@@ -52,12 +52,28 @@
               <h2>Dépenses par cycle</h2>
               <p id="cycle-description" class="muted"></p>
             </div>
-            <select id="cycle-count" class="compact-select" aria-label="Nombre de cycles">
-              <option value="6">6 cycles</option>
-              <option value="12" selected>12 cycles</option>
-              <option value="18">18 cycles</option>
-            </select>
+            <div class="cycle-stepper" aria-label="Nombre de cycles">
+              <button id="cycle-minus" class="cycle-step-btn" type="button" aria-label="Retirer un cycle">−</button>
+              <label class="cycle-count-box">
+                <input id="cycle-count" type="number" min="1" max="36" value="12" inputmode="numeric" aria-label="Nombre de cycles">
+                <span>cycles</span>
+              </label>
+              <button id="cycle-plus" class="cycle-step-btn" type="button" aria-label="Ajouter un cycle">+</button>
+            </div>
           </div>
+
+          <button id="open-stats-filter" class="stats-filter-button" type="button">
+            <span class="stats-filter-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 6h10v2H4zm0 10h16v2H4zm12-5h4v2h-4zM16 4h2v6h-2zM8 12h2v8H8zM4 14h4v2H4z"/></svg>
+            </span>
+            <span class="stats-filter-copy">
+              <span class="stats-filter-title">Filtrer le graphique</span>
+              <strong id="stats-filter-label">Toutes les dépenses</strong>
+              <span id="stats-period-label">Période : cycles récents</span>
+            </span>
+            <span class="stats-filter-chevron">›</span>
+          </button>
+
           <div class="chart-wrap">
             <canvas id="overview-chart"></canvas>
           </div>
@@ -231,6 +247,7 @@
     </nav>
   </div>
 
+  <!-- Transaction sheet -->
   <div id="transaction-modal" class="modal-backdrop hidden" aria-hidden="true">
     <section class="sheet transaction-sheet" role="dialog" aria-modal="true" aria-labelledby="transaction-title">
       <div class="sheet-handle"></div>
@@ -246,6 +263,7 @@
     </section>
   </div>
 
+  <!-- Generic dialog -->
   <div id="dialog-modal" class="modal-backdrop hidden" aria-hidden="true">
     <section class="sheet dialog-sheet" role="dialog" aria-modal="true">
       <div class="sheet-handle"></div>
@@ -255,6 +273,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script type="module" src="./app-fixed.js?v=2"></script>
+  <script type="module" src="./app-fixed.js?v=5"></script>
+  <script type="module" src="./stats-enhanced.js?v=5"></script>
 </body>
 </html>

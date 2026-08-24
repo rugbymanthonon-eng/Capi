@@ -1,9 +1,12 @@
-const CACHE = "capi-v4";
+const CACHE = "capi-v5";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./app-fixed.js",
+  "./app-fixed.js?v=5",
+  "./stats-enhanced.js?v=5",
+  "./stats-theme.js",
+  "./stats-core.js",
   "./db.js",
   "./manifest.webmanifest",
   "./assets/background.webp",
@@ -26,7 +29,6 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin || event.request.method !== "GET") return;
-
   event.respondWith(
     fetch(event.request)
       .then(response => {
